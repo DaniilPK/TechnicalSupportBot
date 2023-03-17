@@ -15,7 +15,7 @@ class Users(BaseModel):
     messageChatID: Mapped[int] = mapped_column(BigInteger)
 
 
-async def newMessage(session: AsyncSession,userID,messageID,messageChatID):
+async def newMessage(session: AsyncSession, userID, messageChatID):
     user = Users(
         userID = userID,
         messageChatID=messageChatID)

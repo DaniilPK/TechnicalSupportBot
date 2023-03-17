@@ -1,0 +1,5 @@
+
+__all__ = ['ConfigDatabasePoolMiddleware','ConfigChatSupportIDMiddleware']
+
+from middlewares.ChatSupportID import ConfigChatSupportIDMiddleware
+from middlewares.MiddlewareDatabasePool import ConfigDatabasePoolMiddleware
