@@ -14,7 +14,6 @@ class Users(BaseModel):
 
     userID: Mapped[int] = mapped_column(BigInteger, primary_key=True)
     ban: Mapped[int] = mapped_column(Boolean, default=False)
-    #client_ban: Mapped[int] = mapped_column(Boolean, default=False)
     regTm: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())
 
     child = relationship(Messages, backref="parent", passive_deletes=True)

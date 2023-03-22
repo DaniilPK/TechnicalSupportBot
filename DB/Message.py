@@ -1,4 +1,6 @@
-from sqlalchemy import BigInteger, Integer, select,ForeignKey
+from datetime import datetime
+
+from sqlalchemy import BigInteger, Integer, select,ForeignKey,DATE
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship, backref
 
@@ -12,6 +14,7 @@ class Messages(BaseModel):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     userID: Mapped[int] = mapped_column(BigInteger, ForeignKey("Users.userID", ondelete='CASCADE'))
     messageChatID: Mapped[int] = mapped_column(BigInteger)
+    messageTime: Mapped[str] = mapped_column(DATE,default=datetime.now().date())
 
 
 async def newMessage(session: AsyncSession, userID, messageChatID):
@@ -24,4 +27,5 @@ async def newMessage(session: AsyncSession, userID, messageChatID):
 async def SearchMessage(session: AsyncSession,messageChatID):
     return (await session.execute(select(Messages.userID).where(
         Messages.messageChatID == messageChatID))).scalars().unique().one_or_none()
+
 

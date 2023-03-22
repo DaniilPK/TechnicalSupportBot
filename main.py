@@ -9,9 +9,11 @@ from aiogram.types import BotCommand, BotCommandScopeAllPrivateChats, BotCommand
 from DB import create_session_pool
 from config import load_config
 from handlers import router_messages
+from language.translator import Translator
 
 from middlewares import ConfigDatabasePoolMiddleware,ConfigChatSupportIDMiddleware,\
     ThrottlingMiddleware
+from middlewares.translator import TranslatorMiddleware
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,7 @@ def register_global_middlewares(dp: Dispatcher, session, chat_id):
     dp.message.outer_middleware.register(ConfigDatabasePoolMiddleware(session))
     dp.update.outer_middleware.register(ConfigChatSupportIDMiddleware(chat_id))
     dp.message.middleware.register(ThrottlingMiddleware())
+    dp.message.middleware.register(TranslatorMiddleware())
 
 
 bot_commands = (
@@ -53,15 +56,15 @@ async def main():
     for cmd in bot_commands_group: commands_for_bot_group.append(BotCommand(command=cmd[0], description=cmd[1]))
     await bot.set_my_commands(commands=commands_for_bot_group,scope=BotCommandScopeAllGroupChats())
 
-    register_global_middlewares(dp, await create_session_pool(config.db,echo=False), config.tg_bot.chat_id)
+    register_global_middlewares(dp, await create_session_pool(config.db,False), config.tg_bot.chat_id)
 
     router_messages(dp)
 
-    await dp.start_polling(bot)
+    await dp.start_polling(bot,translator=Translator())
 
 
 if __name__ == '__main__':
     try:
         asyncio.run(main())
-    except (KeyboardInterrupt, SystemExit):
+    except (KeyboardInterrupt, SystemExit, RuntimeError):
         logger.error("Бот був вимкнений!")

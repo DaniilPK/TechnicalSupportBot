@@ -4,7 +4,7 @@ from aiogram.types import Message
 
 from handlers.addingNewChat import chat_add_handler
 from handlers.message import reply_messages, reply_messages_private, ban_user, unban_user
-from handlers.start import start, help_hanlder
+from handlers.start import start, help_handler
 
 
 class ChatIdFilter(BaseFilter):
@@ -25,11 +25,11 @@ class IsReplyFilter(BaseFilter):
 
 def router_messages(router: Router):
     router.message.register(start,CommandStart(),F.chat.type == 'private')
-    router.message.register(help_hanlder,Command(commands=['help']),F.chat.type == 'private')
+    router.message.register(help_handler, Command(commands=['help']), F.chat.type == 'private')
     router.message.register(ban_user,Command(commands=['ban']),ChatIdFilter(True),IsReplyFilter())
     router.message.register(unban_user,Command(commands=['unban']),ChatIdFilter(True),IsReplyFilter())
 
-    router.message.register(reply_messages_private,F.chat.type == 'private',flags={"throttling":'default'})
+    router.message.register(reply_messages_private,F.chat.type == 'private')
     router.message.register(reply_messages,ChatIdFilter(True),IsReplyFilter())
 
     router.my_chat_member.register(chat_add_handler,ChatMemberUpdatedFilter(

@@ -1,9 +1,8 @@
 import html
-import logging
 
 from aiogram import types, Bot
 from aiogram.exceptions import TelegramForbiddenError
-from aiogram.filters import Command, CommandObject
+from aiogram.filters import CommandObject
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from DB.Message import newMessage, SearchMessage
