@@ -4,8 +4,10 @@ from DB.basemodel import BaseModel
 from config import DbConfig
 
 
+
 async def create_session_pool(db: DbConfig, echo: bool = True) -> Callable[[], AsyncContextManager[AsyncSession]]:
     engine = create_async_engine(url=db.construct_sqlalchemy_url(), echo=echo, _is_async=True)
+
 
     async with engine.begin() as connection:
         await connection.run_sync(BaseModel.metadata.create_all)
